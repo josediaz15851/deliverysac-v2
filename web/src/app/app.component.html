@@ -1,1 +1,25 @@
-﻿<router-outlet />
+﻿@if (isLoggedIn()) {
+  <header class="navbar">
+    <div class="navbar-brand">
+      <span class="logo">DeliverySac</span>
+    </div>
+
+    <nav class="navbar-nav" aria-label="Navegación principal">
+      @for (item of navItems(); track item.path) {
+        <a [routerLink]="item.path" class="nav-link" routerLinkActive="active">{{ item.label }}</a>
+      }
+    </nav>
+
+    <div class="navbar-user">
+      <span class="user-info" title="Rol: {{ rol() }}">
+        <span class="user-name">{{ user()?.usuario }}</span>
+        <span class="user-role">{{ rol() }}</span>
+      </span>
+      <button type="button" class="btn-ghost btn-sm" (click)="logout()">Salir</button>
+    </div>
+  </header>
+}
+
+<main class="main-content">
+  <router-outlet />
+</main>

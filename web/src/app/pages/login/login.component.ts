@@ -17,8 +17,13 @@ export class LoginComponent {
 
   usuario = '';
   password = '';
+  readonly mostrarPassword = signal(false);
   readonly error = signal('');
   readonly loading = signal(false);
+
+  togglePassword(): void {
+    this.mostrarPassword.update((v) => !v);
+  }
 
   submit(): void {
     this.error.set('');

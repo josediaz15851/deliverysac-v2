@@ -16,6 +16,7 @@ export class AdminPanelComponent implements OnInit {
   readonly nombre = signal('');
   readonly direccion = signal('');
   readonly error = signal('');
+  readonly exito = signal('');
   readonly guardando = signal(false);
   readonly pagina = signal(1);
   readonly resultado = signal<PagedResult<Cliente> | null>(null);
@@ -40,12 +41,14 @@ export class AdminPanelComponent implements OnInit {
 
   guardar(): void {
     this.error.set('');
+    this.exito.set('');
     this.guardando.set(true);
     this.clientes.crear(this.nombre(), this.direccion()).subscribe({
       next: () => {
         this.guardando.set(false);
         this.nombre.set('');
         this.direccion.set('');
+        this.exito.set('Cliente registrado correctamente');
         this.cargar();
       },
       error: (err) => {

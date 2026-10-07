@@ -1,20 +1,72 @@
 <div class="login-wrap">
-  <form class="login-card" (ngSubmit)="submit()">
-    <h1>DeliverySac</h1>
-    <label for="usuario">Usuario</label>
-    <input id="usuario" name="usuario" [(ngModel)]="usuario" required autocomplete="username" />
-    <label for="password">Contraseña</label>
-    <input
-      id="password"
-      name="password"
-      type="password"
-      [(ngModel)]="password"
-      required
-      autocomplete="current-password"
-    />
+  <form class="login-card" (ngSubmit)="submit()" aria-label="Inicio de sesión">
+    <div class="login-brand">
+      <svg class="brand-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M3 6h13l3 4h3a1 1 0 011 1v7a1 1 0 01-1 1h-2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M6 20a2 2 0 100-4 2 2 0 000 4zM17 20a2 2 0 100-4 2 2 0 000 4z" stroke="currentColor" stroke-width="2"/>
+        <path d="M1 6h2M1 10h2M1 14h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div>
+        <h1>DeliverySac</h1>
+        <p class="brand-subtitle">Sistema de reparto y trazabilidad</p>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="usuario">Usuario</label>
+      <input
+        id="usuario"
+        name="usuario"
+        [(ngModel)]="usuario"
+        required
+        autocomplete="username"
+        placeholder="Ingrese su usuario"
+      />
+    </div>
+
+    <div class="field">
+      <label for="password">Contraseña</label>
+      <div class="password-wrap">
+        <input
+          id="password"
+          name="password"
+          [type]="mostrarPassword() ? 'text' : 'password'"
+          [(ngModel)]="password"
+          required
+          autocomplete="current-password"
+          placeholder="Ingrese su contraseña"
+        />
+        <button
+          type="button"
+          class="toggle-password"
+          (click)="togglePassword()"
+          [attr.aria-label]="mostrarPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+          tabindex="-1"
+        >
+          @if (mostrarPassword()) {
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2"/>
+              <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+              <path d="M4 4l16 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          } @else {
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2"/>
+              <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          }
+        </button>
+      </div>
+    </div>
+
     @if (error()) {
-      <p class="error" role="alert">{{ error() }}</p>
+      <p class="message message-error" role="alert">{{ error() }}</p>
     }
-    <button type="submit" [disabled]="loading()">{{ loading() ? 'Ingresando…' : 'Ingresar' }}</button>
+
+    <button type="submit" [disabled]="loading()">
+      {{ loading() ? 'Ingresando…' : 'Ingresar' }}
+    </button>
+
+    <p class="hint">Usuarios de prueba: admin / repartidor / supervisor</p>
   </form>
 </div>

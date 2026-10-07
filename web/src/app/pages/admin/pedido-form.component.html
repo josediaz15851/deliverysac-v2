@@ -1,84 +1,112 @@
-<section class="card">
+<section class="card pedido-form">
   <h2>Crear pedido</h2>
 
   @if (pedidoCreado(); as p) {
-    <p class="exito" role="status">
-      Pedido #{{ p.id }} creado — total {{ p.total }}
-      <button type="button" class="link" (click)="verPedido()">Ver detalle</button>
-    </p>
-  }
-
-  <label for="cliente">Cliente</label>
-  <select
-    id="cliente"
-    [ngModel]="clienteId()"
-    (ngModelChange)="clienteId.set($event)"
-  >
-    <option [ngValue]="null">Seleccione un cliente</option>
-    @for (c of clientes(); track c.id) {
-      <option [ngValue]="c.id">{{ c.nombre }}</option>
-    }
-  </select>
-
-  <label for="fecha">Fecha de reparto</label>
-  <input id="fecha" type="date" [ngModel]="fechaReparto()" (ngModelChange)="fechaReparto.set($event)" />
-
-  <label for="comentario">Comentario</label>
-  <input id="comentario" [ngModel]="comentario()" (ngModelChange)="comentario.set($event)" />
-
-  <h3>Líneas de productos</h3>
-  @for (linea of lineas(); track $index) {
-    <div class="linea">
-      <label [for]="'prod-' + $index">Producto</label>
-      <select
-        [id]="'prod-' + $index"
-        [ngModel]="linea.productoId"
-        (ngModelChange)="actualizarLinea($index, { productoId: $event })"
-      >
-        <option [ngValue]="null">Seleccione</option>
-        @for (prod of productos(); track prod.id) {
-          <option [ngValue]="prod.id">{{ prod.nombre }} ({{ prod.precioUnitario }})</option>
-        }
-      </select>
-
-      <label [for]="'cant-' + $index">Cantidad</label>
-      <input
-        [id]="'cant-' + $index"
-        type="number"
-        min="1"
-        [ngModel]="linea.cantidad"
-        (ngModelChange)="actualizarLinea($index, { cantidad: $event })"
-      />
-
-      <label [for]="'precio-' + $index">Precio unitario</label>
-      <input
-        [id]="'precio-' + $index"
-        type="number"
-        min="0"
-        step="0.01"
-        [ngModel]="linea.precioUnitario"
-        (ngModelChange)="actualizarLinea($index, { precioUnitario: $event })"
-      />
-
-      <label [for]="'desc-' + $index">Descripción</label>
-      <input
-        [id]="'desc-' + $index"
-        [ngModel]="linea.descripcion"
-        (ngModelChange)="actualizarLinea($index, { descripcion: $event })"
-      />
-
-      @if (lineas().length > 1) {
-        <button type="button" class="quitar" (click)="quitarLinea($index)">Quitar línea</button>
-      }
+    <div class="message message-success pedido-exito" role="status">
+      <strong>Pedido #{{ p.id }} creado</strong>
+      <span>Total: {{ p.total.toFixed(2) }}</span>
+      <button type="button" class="btn-ghost btn-sm" (click)="verPedido()">Ver detalle</button>
     </div>
   }
 
-  <button type="button" class="secundario" (click)="agregarLinea()">Agregar línea</button>
+  <div class="field">
+    <label for="cliente">Cliente</label>
+    <select
+      id="cliente"
+      [ngModel]="clienteId()"
+      (ngModelChange)="clienteId.set($event)"
+    >
+      <option [ngValue]="null">Seleccione un cliente</option>
+      @for (c of clientes(); track c.id) {
+        <option [ngValue]="c.id">{{ c.nombre }}</option>
+      }
+    </select>
+  </div>
 
-  <p class="total">Total estimado: {{ totalPreview.toFixed(2) }}</p>
+  <div class="form-row">
+    <div class="field">
+      <label for="fecha">Fecha de reparto</label>
+      <input id="fecha" type="date" [ngModel]="fechaReparto()" (ngModelChange)="fechaReparto.set($event)" />
+    </div>
+
+    <div class="field">
+      <label for="comentario">Comentario</label>
+      <input id="comentario" [ngModel]="comentario()" (ngModelChange)="comentario.set($event)" placeholder="Opcional" />
+    </div>
+  </div>
+
+  <div class="lineas-section">
+    <h3>Líneas de productos</h3>
+
+    @for (linea of lineas(); track $index) {
+      <div class="linea-card">
+        <div class="linea-header">
+          <span class="linea-numero">Línea {{ $index + 1 }}</span>
+          @if (lineas().length > 1) {
+            <button type="button" class="btn-ghost btn-sm quitar" (click)="quitarLinea($index)">Quitar</button>
+          }
+        </div>
+
+        <div class="linea-grid">
+          <div class="field linea-field">
+            <label [for]="'prod-' + $index">Producto</label>
+            <select
+              [id]="'prod-' + $index"
+              [ngModel]="linea.productoId"
+              (ngModelChange)="actualizarLinea($index, { productoId: $event })"
+            >
+              <option [ngValue]="null">Seleccione</option>
+              @for (prod of productos(); track prod.id) {
+                <option [ngValue]="prod.id">{{ prod.nombre }} ({{ prod.precioUnitario.toFixed(2) }})</option>
+              }
+            </select>
+          </div>
+
+          <div class="field linea-field">
+            <label [for]="'cant-' + $index">Cantidad</label>
+            <input
+              [id]="'cant-' + $index"
+              type="number"
+              min="1"
+              [ngModel]="linea.cantidad"
+              (ngModelChange)="actualizarLinea($index, { cantidad: $event })"
+            />
+          </div>
+
+          <div class="field linea-field">
+            <label [for]="'precio-' + $index">Precio unitario</label>
+            <input
+              [id]="'precio-' + $index"
+              type="number"
+              min="0"
+              step="0.01"
+              [ngModel]="linea.precioUnitario"
+              (ngModelChange)="actualizarLinea($index, { precioUnitario: $event })"
+            />
+          </div>
+
+          <div class="field linea-field linea-field-wide">
+            <label [for]="'desc-' + $index">Descripción</label>
+            <input
+              [id]="'desc-' + $index"
+              [ngModel]="linea.descripcion"
+              (ngModelChange)="actualizarLinea($index, { descripcion: $event })"
+              placeholder="Descripción del producto"
+            />
+          </div>
+        </div>
+      </div>
+    }
+
+    <button type="button" class="btn-secondary btn-sm" (click)="agregarLinea()">+ Agregar línea</button>
+  </div>
+
+  <div class="pedido-resumen">
+    <p class="total">Total estimado: <strong>{{ totalPreview.toFixed(2) }}</strong></p>
+  </div>
 
   @if (errores().length) {
-    <ul class="error" role="alert">
+    <ul class="message message-error errores" role="alert">
       @for (e of errores(); track $index) {
         <li>{{ e }}</li>
       }

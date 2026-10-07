@@ -1,50 +1,74 @@
-<section class="panel">
-  <h1>Clientes</h1>
+<section class="admin-page">
+  <header class="page-header">
+    <h1>Panel de administración</h1>
+    <p class="text-secondary">Gestiona clientes y crea pedidos de reparto.</p>
+  </header>
 
-  <form class="card" (ngSubmit)="guardar()">
-    <h2>Registrar cliente</h2>
-    <label for="nombre">Nombre</label>
-    <input
-      id="nombre"
-      name="nombre"
-      [ngModel]="nombre()"
-      (ngModelChange)="nombre.set($event)"
-      required
-    />
-    <label for="direccion">Dirección</label>
-    <input
-      id="direccion"
-      name="direccion"
-      [ngModel]="direccion()"
-      (ngModelChange)="direccion.set($event)"
-      required
-    />
-    @if (error()) {
-      <p class="error" role="alert">{{ error() }}</p>
-    }
-    <button type="submit" [disabled]="guardando()">{{ guardando() ? 'Guardando…' : 'Guardar' }}</button>
-  </form>
-
-  <app-pedido-form />
-
-  <div class="card">
-    <h2>Listado</h2>
-    @if (resultado(); as res) {
-      <ul class="lista">
-        @for (cliente of res.items; track cliente.id) {
-          <li>
-            <strong>{{ cliente.nombre }}</strong>
-            <span>{{ cliente.direccion }}</span>
-          </li>
-        } @empty {
-          <li>No hay clientes registrados</li>
+  <div class="admin-grid">
+    <div class="stack">
+      <form class="card" (ngSubmit)="guardar()">
+        <h2>Registrar cliente</h2>
+        <div class="field">
+          <label for="nombre">Nombre</label>
+          <input
+            id="nombre"
+            name="nombre"
+            [ngModel]="nombre()"
+            (ngModelChange)="nombre.set($event)"
+            placeholder="Nombre completo"
+            required
+          />
+        </div>
+        <div class="field">
+          <label for="direccion">Dirección</label>
+          <input
+            id="direccion"
+            name="direccion"
+            [ngModel]="direccion()"
+            (ngModelChange)="direccion.set($event)"
+            placeholder="Dirección de entrega"
+            required
+          />
+        </div>
+        @if (error()) {
+          <p class="message message-error" role="alert">{{ error() }}</p>
         }
-      </ul>
-      <nav class="paginacion" aria-label="Paginación de clientes">
-        <button type="button" (click)="irA(res.page - 1)" [disabled]="res.page <= 1">Anterior</button>
-        <span>Página {{ res.page }} de {{ res.totalPages }} ({{ res.total }})</span>
-        <button type="button" (click)="irA(res.page + 1)" [disabled]="res.page >= res.totalPages">Siguiente</button>
-      </nav>
-    }
+        @if (exito()) {
+          <p class="message message-success" role="status">{{ exito() }}</p>
+        }
+        <button type="submit" [disabled]="guardando()">{{ guardando() ? 'Guardando…' : 'Guardar cliente' }}</button>
+      </form>
+
+      <app-pedido-form />
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Clientes registrados</h2>
+        <span class="badge">{{ resultado()?.total ?? 0 }}</span>
+      </div>
+
+      @if (resultado(); as res) {
+        <ul class="client-list">
+          @for (cliente of res.items; track cliente.id) {
+            <li class="client-item">
+              <div class="client-info">
+                <strong>{{ cliente.nombre }}</strong>
+                <span class="text-secondary">{{ cliente.direccion }}</span>
+              </div>
+            </li>
+          } @empty {
+            <li class="empty-state">No hay clientes registrados</li>
+          }
+        </ul>
+        <nav class="paginacion" aria-label="Paginación de clientes">
+          <button type="button" class="btn-sm" (click)="irA(res.page - 1)" [disabled]="res.page <= 1">Anterior</button>
+          <span>Página {{ res.page }} de {{ res.totalPages }} ({{ res.total }})</span>
+          <button type="button" class="btn-sm" (click)="irA(res.page + 1)" [disabled]="res.page >= res.totalPages">Siguiente</button>
+        </nav>
+      } @else {
+        <p class="text-secondary">Cargando clientes…</p>
+      }
+    </div>
   </div>
 </section>
