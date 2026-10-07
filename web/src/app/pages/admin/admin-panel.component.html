@@ -1,0 +1,48 @@
+<section class="panel">
+  <h1>Clientes</h1>
+
+  <form class="card" (ngSubmit)="guardar()">
+    <h2>Registrar cliente</h2>
+    <label for="nombre">Nombre</label>
+    <input
+      id="nombre"
+      name="nombre"
+      [ngModel]="nombre()"
+      (ngModelChange)="nombre.set($event)"
+      required
+    />
+    <label for="direccion">Dirección</label>
+    <input
+      id="direccion"
+      name="direccion"
+      [ngModel]="direccion()"
+      (ngModelChange)="direccion.set($event)"
+      required
+    />
+    @if (error()) {
+      <p class="error" role="alert">{{ error() }}</p>
+    }
+    <button type="submit" [disabled]="guardando()">{{ guardando() ? 'Guardando…' : 'Guardar' }}</button>
+  </form>
+
+  <div class="card">
+    <h2>Listado</h2>
+    @if (resultado(); as res) {
+      <ul class="lista">
+        @for (cliente of res.items; track cliente.id) {
+          <li>
+            <strong>{{ cliente.nombre }}</strong>
+            <span>{{ cliente.direccion }}</span>
+          </li>
+        } @empty {
+          <li>No hay clientes registrados</li>
+        }
+      </ul>
+      <nav class="paginacion" aria-label="Paginación de clientes">
+        <button type="button" (click)="irA(res.page - 1)" [disabled]="res.page <= 1">Anterior</button>
+        <span>Página {{ res.page }} de {{ res.totalPages }} ({{ res.total }})</span>
+        <button type="button" (click)="irA(res.page + 1)" [disabled]="res.page >= res.totalPages">Siguiente</button>
+      </nav>
+    }
+  </div>
+</section>
