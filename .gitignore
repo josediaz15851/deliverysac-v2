@@ -1,0 +1,20 @@
+# Build artifacts
+bin/
+obj/
+dist/
+out/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# IDE / OS
+.vs/
+.vscode/
+.idea/
+*.user
+Thumbs.db
+
+# Logs y temp
+*.log
+*.tmp
