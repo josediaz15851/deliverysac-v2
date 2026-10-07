@@ -1,11 +1,12 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Cliente, ClienteService, PagedResult } from '../../services/cliente.service';
+import { PedidoFormComponent } from './pedido-form.component';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, PedidoFormComponent],
   templateUrl: './admin-panel.component.html',
   styleUrl: './admin-panel.component.css'
 })

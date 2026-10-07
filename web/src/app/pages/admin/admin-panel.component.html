@@ -25,6 +25,8 @@
     <button type="submit" [disabled]="guardando()">{{ guardando() ? 'Guardando…' : 'Guardar' }}</button>
   </form>
 
+  <app-pedido-form />
+
   <div class="card">
     <h2>Listado</h2>
     @if (resultado(); as res) {

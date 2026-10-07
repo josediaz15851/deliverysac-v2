@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { authGuard } from './auth/auth.guard';
 import { LoginComponent } from './pages/login/login.component';
 import { AdminPanelComponent } from './pages/admin/admin-panel.component';
+import { PedidoDetailComponent } from './pages/admin/pedido-detail.component';
 import { RepartidorRutaComponent } from './pages/repartidor/repartidor-ruta.component';
 import { SupervisorPanelComponent } from './pages/supervisor/supervisor-panel.component';
 
@@ -10,6 +11,12 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: AdminPanelComponent,
+    canActivate: [authGuard],
+    data: { rol: 'ADMIN' }
+  },
+  {
+    path: 'admin/pedidos/:id',
+    component: PedidoDetailComponent,
     canActivate: [authGuard],
     data: { rol: 'ADMIN' }
   },

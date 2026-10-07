@@ -1,0 +1,91 @@
+<section class="card">
+  <h2>Crear pedido</h2>
+
+  @if (pedidoCreado(); as p) {
+    <p class="exito" role="status">
+      Pedido #{{ p.id }} creado — total {{ p.total }}
+      <button type="button" class="link" (click)="verPedido()">Ver detalle</button>
+    </p>
+  }
+
+  <label for="cliente">Cliente</label>
+  <select
+    id="cliente"
+    [ngModel]="clienteId()"
+    (ngModelChange)="clienteId.set($event)"
+  >
+    <option [ngValue]="null">Seleccione un cliente</option>
+    @for (c of clientes(); track c.id) {
+      <option [ngValue]="c.id">{{ c.nombre }}</option>
+    }
+  </select>
+
+  <label for="fecha">Fecha de reparto</label>
+  <input id="fecha" type="date" [ngModel]="fechaReparto()" (ngModelChange)="fechaReparto.set($event)" />
+
+  <label for="comentario">Comentario</label>
+  <input id="comentario" [ngModel]="comentario()" (ngModelChange)="comentario.set($event)" />
+
+  <h3>Líneas de productos</h3>
+  @for (linea of lineas(); track $index) {
+    <div class="linea">
+      <label [for]="'prod-' + $index">Producto</label>
+      <select
+        [id]="'prod-' + $index"
+        [ngModel]="linea.productoId"
+        (ngModelChange)="actualizarLinea($index, { productoId: $event })"
+      >
+        <option [ngValue]="null">Seleccione</option>
+        @for (prod of productos(); track prod.id) {
+          <option [ngValue]="prod.id">{{ prod.nombre }} ({{ prod.precioUnitario }})</option>
+        }
+      </select>
+
+      <label [for]="'cant-' + $index">Cantidad</label>
+      <input
+        [id]="'cant-' + $index"
+        type="number"
+        min="1"
+        [ngModel]="linea.cantidad"
+        (ngModelChange)="actualizarLinea($index, { cantidad: $event })"
+      />
+
+      <label [for]="'precio-' + $index">Precio unitario</label>
+      <input
+        [id]="'precio-' + $index"
+        type="number"
+        min="0"
+        step="0.01"
+        [ngModel]="linea.precioUnitario"
+        (ngModelChange)="actualizarLinea($index, { precioUnitario: $event })"
+      />
+
+      <label [for]="'desc-' + $index">Descripción</label>
+      <input
+        [id]="'desc-' + $index"
+        [ngModel]="linea.descripcion"
+        (ngModelChange)="actualizarLinea($index, { descripcion: $event })"
+      />
+
+      @if (lineas().length > 1) {
+        <button type="button" class="quitar" (click)="quitarLinea($index)">Quitar línea</button>
+      }
+    </div>
+  }
+
+  <button type="button" class="secundario" (click)="agregarLinea()">Agregar línea</button>
+
+  <p class="total">Total estimado: {{ totalPreview.toFixed(2) }}</p>
+
+  @if (errores().length) {
+    <ul class="error" role="alert">
+      @for (e of errores(); track $index) {
+        <li>{{ e }}</li>
+      }
+    </ul>
+  }
+
+  <button type="button" (click)="guardar()" [disabled]="guardando()">
+    {{ guardando() ? 'Guardando…' : 'Crear pedido' }}
+  </button>
+</section>

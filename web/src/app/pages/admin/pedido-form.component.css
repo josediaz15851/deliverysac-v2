@@ -1,0 +1,71 @@
+.card h3 {
+  margin: 0.5rem 0 0;
+  font-size: 1rem;
+}
+
+.linea {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.25rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.linea label {
+  margin-top: 0.25rem;
+}
+
+.linea input,
+.linea select {
+  padding: 0.5rem 0.625rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+}
+
+select {
+  padding: 0.5rem 0.625rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  background: #fff;
+}
+
+input,
+.linea input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.quitar {
+  margin-top: 0.5rem;
+  background: #b91c1c;
+}
+
+.secundario {
+  background: #475569;
+}
+
+.total {
+  font-weight: 700;
+  margin: 0.25rem 0;
+}
+
+.exito {
+  color: #15803d;
+  margin: 0;
+}
+
+.link {
+  background: none;
+  color: #1d4ed8;
+  text-decoration: underline;
+  padding: 0 0.5rem;
+}
+
+.error {
+  color: #b91c1c;
+  font-size: 0.875rem;
+  margin: 0;
+  padding-left: 1.25rem;
+}
