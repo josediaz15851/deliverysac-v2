@@ -11,8 +11,18 @@ public static class DbInitializer
         if (context.Database.IsRelational())
             context.Database.Migrate();
 
+        if (!context.Set<Producto>().Any())
+        {
+            context.Set<Producto>().AddRange(
+                new Producto { Nombre = "Gaseosa 2L", PrecioUnitario = 2.50m },
+                new Producto { Nombre = "Arroz 5kg", PrecioUnitario = 7.00m });
+        }
+
         if (context.Set<Usuario>().Any())
+        {
+            context.SaveChanges();
             return;
+        }
 
         var usuarios = new[]
         {

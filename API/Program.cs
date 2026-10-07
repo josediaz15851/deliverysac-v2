@@ -53,8 +53,10 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
 
-    using var scope = app.Services.CreateScope();
+using (var scope = app.Services.CreateScope())
+{
     var context = scope.ServiceProvider.GetRequiredService<API.Data.DeliverySacContext>();
     API.Data.DbInitializer.Seed(context, scope.ServiceProvider.GetRequiredService<API.Services.IPasswordHasher>());
 }
