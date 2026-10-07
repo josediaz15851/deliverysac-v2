@@ -43,6 +43,42 @@ public class ClientesApiTests : WebApplicationFactory<Program>
 
     private record LoginResult(string Token, string Rol);
     private record ClienteResponse(int Id, string Nombre, string Direccion);
+    private record PagedResult<T>(System.Collections.Generic.IReadOnlyList<T> Items, int Page, int Size, int Total, int TotalPages);
+
+    [Fact]
+    public async Task ListarClientes_Paginado_Respetaloslimites()
+    {
+        var client = await ClienteAutenticadoAsync("admin", "Admin123!");
+
+        for (var i = 1; i <= 12; i++)
+        {
+            var create = await client.PostAsJsonAsync("/api/clientes",
+                new { nombre = $"Cliente {i}", direccion = $"Dir {i}" });
+            create.EnsureSuccessStatusCode();
+        }
+
+        var page1 = await client.GetFromJsonAsync<PagedResult<ClienteResponse>>("/api/clientes?page=1&size=5");
+        var page2 = await client.GetFromJsonAsync<PagedResult<ClienteResponse>>("/api/clientes?page=2&size=5");
+        var page3 = await client.GetFromJsonAsync<PagedResult<ClienteResponse>>("/api/clientes?page=3&size=5");
+
+        Assert.Equal(5, page1!.Items.Count);
+        Assert.Equal(5, page2!.Items.Count);
+        Assert.Equal(2, page3!.Items.Count);
+        Assert.Equal(12, page1.Total);
+        Assert.Equal(3, page1.TotalPages);
+        Assert.Equal(1, page1.Page);
+        Assert.NotEqual(page1.Items[0].Id, page2.Items[0].Id);
+    }
+
+    [Fact]
+    public async Task ListarClientes_ParametrosInvalidos_Retorna400()
+    {
+        var client = await ClienteAutenticadoAsync("admin", "Admin123!");
+
+        var response = await client.GetAsync("/api/clientes?page=0&size=5");
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
 
     [Fact]
     public async Task CrearClienteComoAdmin_Retorna201YRecuperablePorId()
@@ -93,6 +129,16 @@ public class ClientesApiTests : WebApplicationFactory<Program>
 
         var response = await client.PostAsJsonAsync("/api/clientes",
             new { nombre = "X", direccion = "Y" });
+
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task ListarClientesComoRepartidor_Retorna403()
+    {
+        var client = await ClienteAutenticadoAsync("repartidor", "Repartidor123!");
+
+        var response = await client.GetAsync("/api/clientes?page=1&size=10");
 
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
     }

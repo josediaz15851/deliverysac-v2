@@ -1,4 +1,5 @@
 using API.Domain;
+using API.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +39,25 @@ public class ClientesController : ControllerBase
 
         return CreatedAtAction(nameof(Obtener), new { id = cliente.Id },
             new ClienteResponse(cliente.Id, cliente.Nombre, cliente.Direccion));
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<PagedResult<ClienteResponse>>> Listar(
+        [FromQuery] int page = 1, [FromQuery] int size = 10)
+    {
+        if (page < 1 || size < 1 || size > 100)
+            return BadRequest("page debe ser >= 1 y size entre 1 y 100");
+
+        var total = await _context.Clientes.CountAsync();
+        var items = await _context.Clientes
+            .OrderBy(c => c.Id)
+            .Skip((page - 1) * size)
+            .Take(size)
+            .Select(c => new ClienteResponse(c.Id, c.Nombre, c.Direccion))
+            .ToListAsync();
+
+        var totalPages = (int)Math.Ceiling(total / (double)size);
+        return Ok(new PagedResult<ClienteResponse>(items, page, size, total, totalPages));
     }
 
     [HttpGet("{id}")]
