@@ -1,4 +1,4 @@
-# PRD-001: DeliverySac - Reparto y Trazabilidad de Pedidos.
+# PRD-001: DeliverySac - Reparto y Trazabilidad de Pedidos..
 
 ## Contexto y Problema
 En la empresa DeliverySac repartimos con 5 unidades (3 motos lineales y 2 furgonetas). Hoy el administrador asigna clientes y pedidos manualmente, sin visibilidad de dónde están las unidades, qué pedidos se entregaron ni a qué hora. Al final del día solo hay control cuando retornan las unidades: demoras, pérdida de trazabilidad y cero métricas. No tenemos presupuesto ni tiempo para un ERP de reparto; necesitamos algo simple que se haga cargo del control operativo diario.
