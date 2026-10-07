@@ -11,7 +11,9 @@ builder.Services.AddDbContext<API.Data.DeliverySacContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DeliverySac")));
 
 var jwtOptions = builder.Configuration.GetSection(API.Services.JwtOptions.Section).Get<API.Services.JwtOptions>()
-    ?? throw new InvalidOperationException("Falta la seccion Jwt en la configuracion");
+    ?? throw new InvalidOperationException(
+        "Falta la seccion Jwt en la configuracion. Ejecute en Development (dotnet run --project API usa el perfil http por defecto) " +
+        "o provea Jwt__Key, Jwt__Issuer y Jwt__Audience por variables de entorno.");
 builder.Services.AddSingleton(jwtOptions);
 builder.Services.AddSingleton<API.Services.JwtTokenService>();
 
