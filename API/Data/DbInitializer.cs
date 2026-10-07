@@ -8,7 +8,8 @@ public static class DbInitializer
 {
     public static void Seed(DbContext context, IPasswordHasher hasher)
     {
-        context.Database.Migrate();
+        if (context.Database.IsRelational())
+            context.Database.Migrate();
 
         if (context.Set<Usuario>().Any())
             return;
